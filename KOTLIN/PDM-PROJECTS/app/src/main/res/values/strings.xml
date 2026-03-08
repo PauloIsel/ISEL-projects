@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Chelas Multi-Player Poker Dice</string>
+
+    <!-- Lobby Creation Strings -->
+    <string name="lobbycreation_create_lobby">Create Lobby</string>
+    <string name="lobbycreation_lobby_name">Lobby Name</string>
+    <string name="lobbycreation_lobby_description">Lobby Description</string>
+    <string name="lobbycreation_players">Players</string>
+    <string name="lobbycreation_rounds">Rounds</string>
+
+    <!-- Title Strings -->
+    <string name="app_version">Chelas Multi-Player Poker Dice \n v1.0</string>
+    <string name="lobbies">Lobbies</string>
+
+    <!-- About Strings -->
+    <string name="about_developers">Developers</string>
+    <string name="about_game_rules">Game Rules</string>
+    <string name="paulo_magalh_es">- Paulo Magalhães</string>
+    <string name="_51702">51702</string>
+    <string name="daniel_santos">- Daniel Santos</string>
+    <string name="_51701">51701</string>
+    <string name="diogo_cardoso">- Diogo Cardoso</string>
+    <string name="_51474">51474</string>
+    <string name="contact_us">Contact us</string>
+
+</resources>

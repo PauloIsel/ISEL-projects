@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/error_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <article class="error-container">
+        <div class="error-icon">⚠️</div>
+        <h2>Oops! Something went wrong...</h2>
+
+        <div class="error-message">
+            <p>{{error}}</p>
+        </div>
+
+        <div class="actions">
+            {{#if backLink}}
+                <a href="{{backLink}}" class="btn">Go Back</a>
+            {{/if}}
+            <a href="/" class="btn">Home</a>
+        </div>
+    </article>
+</section>

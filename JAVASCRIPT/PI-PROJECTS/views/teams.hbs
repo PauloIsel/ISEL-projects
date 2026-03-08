@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="/teams_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<h2>
+    {{#if competitionCode}} 
+        Teams - {{competitionCode}} {{season}} 
+    {{/if}}
+</h2>
+
+{{#if teams}}
+    <ul class="teams-list">
+        {{#each teams}}
+        <li class="team-box">
+            <h3>{{teamName}}</h3>
+            {{#if players}}
+                <h4>Players:</h4>
+                <ul class="players-list">
+                    {{#each players}}
+                    <li class="player-item">
+                        <strong class="player-name">{{playerName}}</strong>
+                        - <span class="player-pos">{{position}}</span><br>
+                    </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p>No players data available</p>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p class="errorText">No teams found for this competition and season.</p>
+    <button class="btn-back" onclick="window.history.back();">Go Back</button>
+{{/if}}
+    </ul>
+
+<script> (function(){
+    document.querySelectorAll('.player-item').forEach(li => {
+        const posElem = li.querySelector('.player-pos');
+        if (!posElem) return;
+        const posText = (posElem.textContent || '').toLowerCase().trim();
+        if (/\b(goalkeeper|keeper|gk)\b/.test(posText)) {
+            posElem.classList.add('pos-gk');
+        } 
+        else if (/\b(midfield|right winger|left winger|centre-forward)\b/.test(posText)) {
+            posElem.classList.add('pos-mf');
+        } 
+        else if (/\b(defence|centre-back|right-back|left-back)\b/.test(posText)) {
+            posElem.classList.add('pos-df');
+        } 
+        else if (/\b(forward|offence)\b/.test(posText)) {
+            posElem.classList.add('pos-fw');
+        } else {
+            posElem.classList.add('pos-unknown');
+        }
+    });
+    })();
+</script>

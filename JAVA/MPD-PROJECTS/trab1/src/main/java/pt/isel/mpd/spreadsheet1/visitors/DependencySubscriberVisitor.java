@@ -1,0 +1,29 @@
+package pt.isel.mpd.spreadsheet1.visitors;
+
+import pt.isel.mpd.spreadsheet1.expressions.RangeExpr;
+import pt.isel.mpd.spreadsheet1.model.Cell;
+import pt.isel.mpd.spreadsheet1.model.CellRef;
+
+public class DependencySubscriberVisitor extends DependencyBaseVisitor {
+    public DependencySubscriberVisitor(Cell cell) {
+        super(cell);
+    }
+
+    @Override
+    public void visit(CellRef cellRef) {
+        Cell referencedCell = this.getCell().sheet.getCellAt(cellRef.getRow(), cellRef.getCol());
+        referencedCell.subscribe(this.getCell());
+    }
+
+    @Override
+    public void visit(RangeExpr n) {
+        for (int row = n.getCoordsStart().row(); row <= n.getCoordsEnd().row(); row++) {
+            for (int col = n.getCoordsStart().col(); col <= n.getCoordsEnd().col(); col++) {
+                Cell cell = n.getSheet().getCellAt(row, col);
+                if (cell != null) {
+                    cell.subscribe(this.getCell());
+                }
+            }
+        }
+    }
+}

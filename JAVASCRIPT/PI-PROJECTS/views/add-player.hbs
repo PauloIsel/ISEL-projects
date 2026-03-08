@@ -1,0 +1,169 @@
+<link rel="stylesheet" href="/add-player_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <h2>Add Player to {{group.name}}</h2>
+
+    <p class="player-count">Players Selected: <strong><span id="current-count">{{selectedPlayerCount}}</span>/11</strong></p>
+
+    {{#if error}}
+        <article class="error-box">
+            <p class="error-text">⚠️ {{error}}</p>
+        </article>
+    {{/if}}
+
+    <p class="filter-info">Available players from {{group.competition}} - {{group.year}}</p>
+
+    {{#if availablePlayers}}
+        <div class="search-container">
+            <input type="text" id="player-search" placeholder="Search player by name..." class="search-input">
+        </div>
+
+        <form method="POST" action="/groups/{{group.id}}/add-player?token={{token}}" class="players-form" id="add-players-form">
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Add Selected Players</button>
+            </div>
+            <table class="players-table" id="players-list">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Player Name</th>
+                        <th>Team</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each availablePlayers}}
+                    <tr class="player-row" data-player-name="{{this.playerName}}" data-search-text="{{this.playerName}} {{this.teamName}}">
+                        <td class="checkbox-cell">
+                            <input type="checkbox" id="player-{{this.playerId}}" name="players" value="{{this.playerId}}|{{this.teamCode}}" class="player-select">
+                        </td>
+                        <td>{{this.playerName}}</td>
+                        <td>{{this.teamName}} ({{this.teamCode}})</td>
+                        <td>{{this.position}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </form>
+    {{else}}
+        <article class="empty-state">
+            <p class="empty-message">No players available.</p>
+        </article>
+    {{/if}}
+
+    <div class="back-action">
+        <a href="/groups/{{group.id}}?token={{token}}">← Back to Group</a>
+    </div>
+</section>
+
+<script>
+    const TOTAL_SLOTS = 11;
+    const CURRENT_PLAYERS = {{selectedPlayerCount}};
+    const MAX_SELECTABLE = TOTAL_SLOTS - CURRENT_PLAYERS;
+
+    const form = document.getElementById('add-players-form');
+    const checkboxes = document.querySelectorAll('.player-select');
+    const currentCountSpan = document.getElementById('current-count');
+    const submitBtn = document.querySelector('.btn-submit');
+    const searchInput = document.getElementById('player-search');
+    const playersList = document.getElementById('players-list');
+    const playerItems = playersList.querySelectorAll('.player-row');
+
+    // Search functionality
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        let visibleCount = 0;
+
+        playerItems.forEach(item => {
+            const searchText = item.getAttribute('data-search-text').toLowerCase();
+            if (searchText.includes(searchTerm)) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        const existingMessage = playersList.querySelector('.no-results-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        if (visibleCount === 0 && searchTerm.length > 0) {
+            const noResultsMsg = document.createElement('tr');
+            noResultsMsg.className = 'no-results-message';
+            noResultsMsg.innerHTML = '<td colspan="6">No players found matching your search.</td>';
+            playersList.querySelector('tbody').appendChild(noResultsMsg);
+        }
+    });
+
+    function updateUI() {
+        const selectedCount = document.querySelectorAll('.player-select:checked').length;
+        const totalWillBe = CURRENT_PLAYERS + selectedCount;
+        
+        // Update the players selected counter
+        currentCountSpan.textContent = selectedCount;
+        
+        // Disable unchecked checkboxes if we've reached the limit
+        checkboxes.forEach(checkbox => {
+            if (!checkbox.checked && selectedCount >= MAX_SELECTABLE) {
+                checkbox.disabled = true;
+                checkbox.parentElement.style.opacity = '0.5';
+                checkbox.parentElement.title = 'Maximum players reached';
+            } else {
+                checkbox.disabled = false;
+                checkbox.parentElement.style.opacity = '1';
+                checkbox.parentElement.title = '';
+            }
+        });
+
+        // Disable submit if no players selected
+        submitBtn.disabled = selectedCount === 0;
+        submitBtn.style.opacity = selectedCount === 0 ? '0.5' : '1';
+    }
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateUI);
+    });
+
+    // Make entire row clickable to toggle checkbox
+    playerItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Don't trigger if clicking directly on checkbox
+            if (e.target.type === 'checkbox') {
+                return;
+            }
+            // Find the checkbox in this row and toggle it
+            const checkbox = this.querySelector('.player-select');
+            if (checkbox && !checkbox.disabled) {
+                checkbox.checked = !checkbox.checked;
+                updateUI();
+            }
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        const selectedCount = document.querySelectorAll('.player-select:checked').length;
+        const totalWillBe = CURRENT_PLAYERS + selectedCount;
+        
+        if (selectedCount === 0) {
+            e.preventDefault();
+            alert('Please select at least one player');
+            return false;
+        }
+
+        if (totalWillBe > TOTAL_SLOTS) {
+            e.preventDefault();
+            alert(`You can only add ${MAX_SELECTABLE} more player(s). You selected ${selectedCount}.`);
+            return false;
+        }
+    });
+
+    updateUI();
+</script>

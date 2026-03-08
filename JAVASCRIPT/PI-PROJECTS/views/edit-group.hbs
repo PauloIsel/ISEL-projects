@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="/edit-group_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <h2>Edit Group</h2>
+
+    <form class="form-container" method="POST" action="/groups/{{group.id}}/edit">
+        {{#if error}}
+            <article class="error-box">
+                <p class="error-text">⚠️ {{error}}</p>
+            </article>
+        {{/if}}
+
+        <label for="name">
+            <span class="label-text">Group Name:</span>
+            <input type="text" id="name" name="name" required placeholder="Enter group name" value="{{group.name}}" autofocus>
+        </label>
+
+        <label for="description">
+            <span class="label-text">Description:</span>
+            <textarea id="description" name="description" required placeholder="Describe your group...">{{group.description}}</textarea>
+        </label>
+
+        <p class="readonly-info">Competition: <strong>{{group.competition}}</strong></p>
+        <p class="readonly-info">Year: <strong>{{group.year}}</strong></p>
+
+        <button type="submit" class="btn-submit">Save Changes</button>
+    </form>
+
+    <div class="form-actions">
+        <a href="/groups/{{group.id}}">Cancel</a>
+    </div>
+</section>

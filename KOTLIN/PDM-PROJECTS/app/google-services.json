@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260985130599",
+    "project_id": "chelas-multiplayer-pokerdice",
+    "storage_bucket": "chelas-multiplayer-pokerdice.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260985130599:android:ac928990a48c0e588d0ec2",
+        "android_client_info": {
+          "package_name": "com.example.chelasmulti_playerpokerdice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZhUR3OL4O12F9mQykpwa2gFJ1bgyUCq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

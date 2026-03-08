@@ -1,0 +1,39 @@
+* { font-family: Arial }
+
+header {
+	display: flex;
+	align-items:center; 
+	justify-content:space-between;
+	padding: 0px 20px 0px 20px;
+	box-shadow: 0 6px 4px rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+	background-color: #364769;
+}
+
+body { background-color:blanchedalmond }
+
+.nav_bar {
+    display: flex; 
+    gap: 20px
+}
+
+.nav_bar a, .title a {
+    color: white; 
+    text-decoration: none
+}
+
+.header_text {
+    font-weight: bold;
+}
+
+.logout_btn {
+    margin: 0;
+}
+
+.logout_btn button {
+    border: none;
+    color: #364769;
+    font-size: inherit;
+    border-radius: 20px;
+    padding: 0 10px;
+}

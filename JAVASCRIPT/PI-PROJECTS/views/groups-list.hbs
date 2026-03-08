@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="/groups-list_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <h2>My Groups</h2>
+
+    {{#if groups}}
+        <div class="create-action">
+            <a href="/groups/create" class="btn-create">+ Create New Group</a>
+        </div>
+        <table class="groups-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Competition</th>
+                    <th>Year</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each groups}}
+                <tr>
+                    <td class="group-name">{{this.name}}</td>
+                    <td class="group-desc">{{this.description}}</td>
+                    <td>{{this.competition}}</td>
+                    <td>{{this.year}}</td>
+                    <td class="group-actions">
+                        <a href="/groups/{{this.id}}" class="btn-view">View Details</a>
+                        <a href="/groups/{{this.id}}/edit" class="btn-edit">Edit</a>
+                        <form method="POST" action="/groups/{{this.id}}/delete" onsubmit="return confirm('Are you sure?')" style="display:inline">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <article class="empty-state">
+            <p class="empty-message">You don't have any groups yet.</p>
+            <a href="/groups/create" class="btn-create">Create your first group</a>
+        </article>
+    {{/if}}
+</section>

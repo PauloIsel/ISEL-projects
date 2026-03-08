@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="/create-group_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <h2>Create New Group</h2>
+
+    <form class="form-container" method="POST" action="/groups">
+        {{#if error}}
+            <article class="error-box">
+                <p class="error-text">⚠️ {{error}}</p>
+            </article>
+        {{/if}}
+
+        <label for="name">
+            <span class="label-text">Group Name:</span>
+            <input type="text" id="name" name="name" required placeholder="e.g., My Dream Team" value="{{formData.name}}" autofocus>
+        </label>
+
+        <label for="description">
+            <span class="label-text">Description:</span>
+            <textarea id="description" name="description" required placeholder="Describe your group...">{{formData.description}}</textarea>
+        </label>
+
+        <label for="competition">
+            <span class="label-text">Competition:</span>
+            <select id="competition" name="competition" required>
+                <option value="">Select competition...</option>
+                {{#each competitions}}
+                <option value="{{this.code}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </label>
+
+        <label for="year">
+            <span class="label-text">Year:</span>
+            <input type="text" id="year" name="year" required placeholder="e.g., 2024" pattern="[0-9]{4}" value="{{formData.year}}">
+        </label>
+
+        <button type="submit" class="btn-submit">Create Group</button>
+    </form>
+
+    <div class="form-actions">
+        <a href="/groups">Cancel</a>
+    </div>
+</section>

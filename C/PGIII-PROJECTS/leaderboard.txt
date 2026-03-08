@@ -1,0 +1,29 @@
+beginner:
+70 - Tiago
+70 - PAULAO
+50 - José
+100 - John Doe
+60 - Inês
+30 - João
+1 - Stora
+3 - DIOGAO
+40 - Maria
+intermediate:
+70 - Miguel
+60 - Rita
+40 - Ana
+50 - Pedro
+1 - Teste
+30 - Carlos
+advanced:
+150 - Teste1
+60 - Teste2
+50 - Sofia
+30 - Joana
+90 - Manuel
+100 - Margarida
+40 - António
+70 - Teste3
+800 - Teste4
+1450 - Teste5
+900 - Teste6

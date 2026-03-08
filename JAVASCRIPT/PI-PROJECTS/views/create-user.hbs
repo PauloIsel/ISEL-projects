@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/create-user_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <article class="form-container">
+        <h2>Create an Account</h2>
+
+        <form action="/users/register" method="POST">
+            {{#if error}}
+                <article class="error-box">
+                    <p class="error-text">{{error}}</p>
+                </article>
+            {{/if}}
+
+            <label for="username">
+                <span class="label-text">Username:</span>
+                <input type="text" id="username" name="username" required placeholder="Choose your username" autofocus value="{{formData.username}}">
+            </label>
+
+            <label for="password">
+                <span class="label-text">Password:</span>
+                <input type="password" id="password" name="password" required placeholder="Choose a password (min 6 characters)" minlength="6">
+            </label>
+
+            <label for="confirmPassword">
+                <span class="label-text">Confirm Password:</span>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password" minlength="6">
+            </label>
+
+            <button type="submit" class="btn-submit">Create Account</button>
+        </form>
+
+        <article class="info-box">
+            <h3>Important:</h3>
+            <ul>
+                <li>Your username must be unique</li>
+                <li>Password must be at least 6 characters long</li>
+                <li>Keep your password secure</li>
+                <li>You can manage your groups after registration</li>
+            </ul>
+        </article>
+
+        <nav class="form-actions">
+            <p>Already have an account? <a href="/users/accounts">Login here</a></p>
+        </nav>
+    </article>
+</section>

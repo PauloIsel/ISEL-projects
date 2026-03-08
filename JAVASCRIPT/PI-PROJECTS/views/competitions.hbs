@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/competitions_view.css">
+
+<section>
+    <div class="page-header">
+        <h2>Competitions</h2>
+        <div class="year-filter">
+            <label for="year-select">Filter by year:</label>
+            <select id="year-select">
+                <option value="2025" selected>2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+            </select>
+        </div>
+    </div>
+
+    {{#if competitions}}
+        <table class="competitions-table">
+            <thead>
+                <tr>
+                    <th>Competition</th>
+                    <th>Code</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each competitions}}
+                <tr>
+                    <td class="competition-name">{{name}}</td>
+                    <td>{{code}}</td>
+                    <td class="competition-action">
+                        <form action="/competitions/{{code}}/teams" class="competition-form">
+                            <input type="hidden" name="season" class="season-input" value="2025">
+                            <button type="submit" class="btn-search">Search Teams</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <p class="empty-message">No competitions available.</p>
+    {{/if}}
+</section>
+
+<script>
+    const yearSelect = document.getElementById('year-select');
+    const seasonInputs = document.querySelectorAll('.season-input');
+
+    yearSelect.addEventListener('change', function() {
+        const selectedYear = this.value;
+        seasonInputs.forEach(input => {
+            input.value = selectedYear;
+        });
+    });
+</script>

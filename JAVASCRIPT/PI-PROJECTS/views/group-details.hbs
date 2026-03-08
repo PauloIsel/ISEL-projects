@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="/group-details_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <h2>{{group.name}}</h2>
+
+    <div class="content-wrapper">
+        <div class="sidebar">
+            <article class="group-info">
+                <p class="group-desc"><strong>Description:</strong> {{group.description}}</p>
+                <p><strong>Competition:</strong> {{group.competition}}</p>
+                <p><strong>Year:</strong> {{group.year}}</p>
+            </article>
+
+            <div class="actions">
+                <a href="/groups/{{group.id}}/edit" class="btn-edit">Edit Group</a>
+                <a href="/groups/{{group.id}}/add-player" class="btn-add">+ Add Player</a>
+                <form method="POST" action="/groups/{{group.id}}/delete" onsubmit="return confirm('Are you sure you want to delete this group?')" style="display:contents">
+                    <button type="submit" class="btn-delete">Delete Group</button>
+                </form>
+                <a href="/groups" class="btn-back">← Back to Groups</a>
+            </div>
+        </div>
+
+        <article class="players-section">
+            {{#if group.players}}
+                <h3>Players ({{group.players.length}}/11)</h3>
+                <table class="players-table">
+                    <thead>
+                        <tr>
+                            <th>Player Name</th>
+                            <th>Team</th>
+                            <th>Position</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each group.players}}
+                        <tr class="player-row">
+                            <td>{{this.playerName}}</td>
+                            <td>{{this.teamName}}</td>
+                            <td><span class="position">{{this.position}}</span></td>
+                            <td>
+                                <form method="POST" action="/groups/{{../group.id}}/remove-player" class="remove-form">
+                                    <input type="hidden" name="playerId" value="{{this.playerId}}">
+                                    <button type="submit" class="btn-remove">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                <p class="empty-message">No players in this group yet.</p>
+            {{/if}}
+        </article>
+    </div>
+</section>

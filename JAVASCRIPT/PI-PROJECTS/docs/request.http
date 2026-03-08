@@ -1,0 +1,70 @@
+
+GET http://localhost:8080/api/competitions
+
+###
+
+GET http://localhost:8080/api/competitions/PPL/teams?season=2024
+
+###
+
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+	"username": "newuser"
+}
+
+###
+
+GET http://localhost:8080/api/groups
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+
+###
+
+GET http://localhost:8080/api/groups/f5c44c50-cfdc-434c-a113-12d59f94480b
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+
+###
+
+POST http://localhost:8080/api/groups
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+Content-Type: application/json
+
+{
+	"name": "My PPL Team 2024",
+	"description": "My favorite players from PPL 2024",
+	"competition": "PPL",
+	"year": "2024"
+}
+
+###
+
+PUT http://localhost:8080/api/groups/f5c44c50-cfdc-434c-a113-12d59f94480b
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+Content-Type: application/json
+
+{
+	"name": "Updated Group Name",
+	"description": "Updated description"
+}
+
+###
+
+DELETE http://localhost:8080/api/groups/f5c44c50-cfdc-434c-a113-12d59f94480b
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+
+###
+
+POST http://localhost:8080/api/groups/f5c44c50-cfdc-434c-a113-12d59f94480b/players
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2
+Content-Type: application/json
+
+{
+	"playerId": "105208",
+	"teamId": "RIO"
+}
+
+###
+
+DELETE http://localhost:8080/api/groups/f5c44c50-cfdc-434c-a113-12d59f94480b/players/p12345
+Authorization: Bearer 6092b4a4-5ee8-439b-9dcd-0fee9c5fd9b2

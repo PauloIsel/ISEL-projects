@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="/login_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <article class="form-container">
+        <h2>Login</h2>
+        <p class="subtitle">Access your groups and manage your team</p>
+
+        {{#if error}}
+            <article class="error-box">
+                <p class="error-text">{{error}}</p>
+            </article>
+        {{/if}}
+
+        <form action="/users/login" method="POST">
+            <label for="username">
+                <span class="label-text">Username:</span>
+                <input type="text" id="username" name="username" required placeholder="Enter your username" value="{{formData.username}}" autofocus>
+            </label>
+
+            <label for="password">
+                <span class="label-text">Password:</span>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </label>
+
+            <button type="submit" class="btn-submit">Login</button>
+        </form>
+
+        <nav class="form-actions">
+            <p>Don't have an account? <a href="/users/create">Register here</a></p>
+        </nav>
+    </article>
+</section>

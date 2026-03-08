@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="/user-created_view.css">
+
+{{#section 'nav'}}
+    <a href="/competitions">
+        <p class="header_text">Competitions</p>
+    </a>
+{{/section}}
+
+<section>
+    <article class="success-container">
+        <h2>✓ Account created successfully!</h2>
+        <p class="subtitle">Welcome, {{user.username}}!</p>
+
+        <article class="token-box">
+            <p class="token-note">Your account has been created. You can now log in to manage your groups.</p>
+        </article>
+
+        <a href="/users/accounts" class="btn-primary">
+            Go to Login
+        </a>
+    </article>
+</section>

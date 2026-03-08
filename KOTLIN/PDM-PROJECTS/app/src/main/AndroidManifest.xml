@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application
+        android:name=".ChelasPokerDiceApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_icon_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ChelasMultiPlayerPokerDice">
+        <activity
+            android:name=".title.MainActivity" android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.ChelasMultiPlayerPokerDice">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".about.AboutActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".profile.ProfileActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".lobbies.LobbiesActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".lobbyCreation.LobbyCreationActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity android:name=".lobby.LobbyActivity" android:exported="true" android:screenOrientation="portrait" />
+        <activity
+            android:name=".game.GameActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.ChelasMultiPlayerPokerDice" />
+
+        <service android:name=".appServices.LobbyTaskService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            />
+        
+        <service android:name=".appServices.GameTaskService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            />
+    </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
+</manifest>

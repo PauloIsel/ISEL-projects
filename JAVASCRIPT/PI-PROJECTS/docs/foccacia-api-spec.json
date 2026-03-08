@@ -1,0 +1,479 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Football API",
+    "description": "This is a simple football API",
+    "contact": {
+      "email": "you@your-company.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [
+    { "name": "competitions"},
+    { "name": "users"},
+    { "name": "groups"} 
+  ],
+  "paths": {
+    "/competitions": {
+      "get": {
+        "tags": [
+          "competitions"
+        ],
+        "summary": "get competitions",
+        "description": "By passing in the appropriate options, get the available competitions.",
+        "operationId": "getCompetitions",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum number of records to return",
+            "schema": {
+              "maximum": 50,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Competitions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                     "$ref": "#/components/schemas/Competition" 
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+     "/competitions/{competitionCode}/teams": {
+      "get": {
+        "tags": [
+            "competitions"
+        ],
+        "summary": "Obtain teams by competition and season",
+        "description": "Returns a list of teams participating in a specific competition during a given season, along with brief details of their players.",
+        "operationId": "getTeamsByCompetitionSeason",
+        "parameters": [
+          {
+            "name": "competitionCode",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Code of the competition (ex: 'EPL', 'UEFA')"
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "pattern": "^[0-9]{4}$" },
+            "description": "Year/season (ex: 2024)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of teams with player briefs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { 
+                    "$ref": "#/components/schemas/CompetitionAndSeason"
+                }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request parameters" },
+          "404": { "description": "Competition or season not found" }
+        }
+      }
+    },
+
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a new user",
+        "description": "Create a new user given a username. Returns the created user and a token (UUID) to be used as a Bearer token for group operations.",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Username for the new user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid username" },
+          "409": { "description": "Username already exists" }
+        }
+      }
+    },
+
+    "/groups": {
+      "get": {
+        "tags": ["groups"],
+        "summary": "List all Best XI groups",
+        "operationId": "listGroups",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of groups (summary)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Group" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized - missing or invalid token" }
+        }
+      },
+      "post": {
+        "tags": ["groups"],
+        "summary": "Create a new Best XI group",
+        "operationId": "createGroup",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewGroup" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Group created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Group" } } } },
+          "400": { "description": "Invalid input or validation failed (e.g., year format)" },
+          "401": { "description": "Unauthorized - missing or invalid token" }
+        }
+      }
+    },
+
+    "/groups/{groupId}": {
+      "parameters": [
+        {
+          "name": "groupId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" },
+          "description": "Identifier of the group"
+        }
+      ],
+      "get": {
+        "tags": ["groups"],
+        "summary": "Get group details",
+        "operationId": "getGroup",
+        "security": [ { "bearerAuth": [] } ],
+        "responses": {
+          "200": {
+            "description": "Group details including selected players",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GroupDetails" } } }
+          },
+          "400": { "description": "Invalid group ID" },
+          "401": { "description": "Unauthorized - missing or invalid token" },
+          "404": { "description": "Group not found" }
+        }
+      },
+      "put": {
+        "tags": ["groups"],
+        "summary": "Edit group (change name and/or description)",
+        "operationId": "editGroup",
+        "security": [ { "bearerAuth": [] } ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateGroup" } } }
+        },
+        "responses": {
+          "200": { "description": "Group updated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Group" } } } },
+          "400": { "description": "Invalid input" },
+          "401": { "description": "Unauthorized - missing or invalid token" },
+          "404": { "description": "Group not found" }
+        }
+      },
+      "delete": {
+        "tags": ["groups"],
+        "summary": "Delete a group",
+        "operationId": "deleteGroup",
+        "security": [ { "bearerAuth": [] } ],
+        "responses": {
+          "204": { "description": "Group deleted, no content" },
+          "401": { "description": "Unauthorized - missing or invalid token" },
+          "404": { "description": "Group not found" }
+        }
+      }
+    },
+
+    "/groups/{groupId}/players": {
+      "post": {
+        "tags": ["groups"],
+        "summary": "Add a player to group's Best XI",
+        "operationId": "addPlayerToGroup",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GroupPlayerCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Player added to group", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GroupPlayer" } } } },
+          "400": { "description": "Invalid input, player not from group's competition/year, or group already has 11 players" },
+          "401": { "description": "Unauthorized - missing or invalid token" },
+          "404": { "description": "Group not found" }
+        }
+      }
+    },
+
+    "/groups/{groupId}/players/{playerId}": {
+      "delete": {
+        "tags": ["groups"],
+        "summary": "Remove a player from a group's Best XI",
+        "operationId": "removePlayerFromGroup",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Player removed" },
+          "400": { "description": "Invalid request" },
+          "401": { "description": "Unauthorized - missing or invalid token" },
+          "404": { "description": "Group or player not found" }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "UUID",
+        "description": "Authorization token generated when a user is created. Use as: Authorization: Bearer <token>. Token is a UUID produced by crypto.randomUUID()."
+      }
+    },
+    "schemas": {
+      "Competition": {
+        "required": [
+          "code",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "EPL"
+          },
+          "name": {
+            "type": "string",
+            "example": "English Premier League"
+          }
+        }
+      },
+
+      "PlayerBrief": {
+        "type": "object",
+        "required": [
+          "playerId", 
+          "playerName", 
+          "position"
+        ],
+        "properties": {
+          "playerId": { 
+            "type": "string", 
+            "example": "p12345" 
+          },
+          "playerName": { 
+            "type": "string", 
+            "example": "Cristiano Ronaldo" 
+          },
+          "position": { 
+            "type": "string", 
+            "example": "Forward" 
+          }
+        }
+      },
+      "CompetitionAndSeason": {
+        "type": "object",
+        "required": [
+          "teamId",
+          "teamName", 
+          "country", 
+          "players"],
+        "properties": {
+          "teamId": {
+            "type": "string", 
+            "example": "MUN" 
+          },
+          "teamName": { 
+            "type": "string", 
+            "example": "Manchester United" 
+          },
+          "country": { 
+            "type": "string", 
+            "example": "England" 
+          },
+          "players": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PlayerBrief" }
+          }
+        }
+      },
+
+      "NewUser": {
+        "type": "object",
+        "required": ["username"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "alice",
+            "description": "Unique username for the new user"
+          }
+        }
+      },
+
+      "User": {
+        "type": "object",
+        "required": ["username", "token"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "alice"
+          },
+          "token": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "description": "UUID token generated at user creation; send as Bearer token in Authorization header for group operations. Generated by crypto.randomUUID()."
+          }
+        }
+      },
+
+      "NewGroup": {
+        "type": "object",
+        "required": ["name", "competition", "year"],
+        "properties": {
+          "name": { "type": "string", "example": "Alice's Best XI" },
+          "description": { "type": "string", "example": "My favorite players from EPL 2024" },
+          "competition": { "type": "string", "example": "EPL" },
+          "year": { "type": "string", "pattern": "^[0-9]{4}$", "example": "2024" }
+        }
+      },
+
+      "UpdateGroup": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "New group name" },
+          "description": { "type": "string", "example": "Updated description" }
+        }
+      },
+
+      "GroupPlayerCreate": {
+        "type": "object",
+        "required": ["playerId", "teamId"],
+        "properties": {
+          "playerId": { "type": "string", "example": "p12345" },
+          "teamId": { "type": "string", "example": "MUN" }
+        }
+      },
+
+      "GroupPlayer": {
+        "type": "object",
+        "required": ["playerId", "playerName", "teamId", "teamName"],
+        "properties": {
+          "playerId": { "type": "string", "example": "p12345" },
+          "playerName": { "type": "string", "example": "Cristiano Ronaldo" },
+          "teamId": { "type": "string", "example": "MUN" },
+          "teamName": { "type": "string", "example": "Manchester United" },
+          "position": { "type": "string", "example": "Forward" },
+          "nationality": { "type": "string", "example": "Portugal" },
+          "age": { "type": "integer", "example": 39 }
+        }
+      },
+
+      "Group": {
+        "type": "object",
+        "required": ["id", "name", "competition", "year"],
+        "properties": {
+          "id": { "type": "string", "example": "g1" },
+          "name": { "type": "string", "example": "Alice's Best XI" },
+          "description": { "type": "string", "example": "My favorite players from EPL 2024" },
+          "competition": { "type": "string", "example": "EPL" },
+          "year": { "type": "string", "pattern": "^[0-9]{4}$", "example": "2024" }
+        }
+      },
+
+      "GroupDetails": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Group" },
+          {
+            "type": "object",
+            "properties": {
+              "players": { "type": "array", "maxItems": 11, "items": { "$ref": "#/components/schemas/GroupPlayer" } }
+            }
+          }
+        ]
+      }
+
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}
